@@ -26,7 +26,7 @@ build/Release
 # Dependency directory
 node_modules
 typings
-lib
+#lib
 server-root/scripts
 build
 

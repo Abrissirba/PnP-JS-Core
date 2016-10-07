@@ -163,6 +163,11 @@ var RuntimeConfigImpl = (function () {
                 webAbsoluteUrl: config.nodeClientOptions.siteUrl,
             };
         }
+        if (config.hasOwnProperty("customHttpClient")) {
+            this._useNodeClient = false;
+            this._useSPRequestExecutor = false;
+            this._customHttpClient = config.customHttpClient;
+        }
     };
     Object.defineProperty(RuntimeConfigImpl.prototype, "headers", {
         get: function () {
@@ -209,6 +214,13 @@ var RuntimeConfigImpl = (function () {
     Object.defineProperty(RuntimeConfigImpl.prototype, "nodeRequestOptions", {
         get: function () {
             return this._nodeClientData;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RuntimeConfigImpl.prototype, "customHttpClient", {
+        get: function () {
+            return this._customHttpClient;
         },
         enumerable: true,
         configurable: true
@@ -483,6 +495,9 @@ var HttpClient = (function () {
         else if (pnplibconfig_1.RuntimeConfig.useNodeFetchClient) {
             var opts = pnplibconfig_1.RuntimeConfig.nodeRequestOptions;
             return new nodefetchclient_1.NodeFetchClient(opts.siteUrl, opts.clientId, opts.clientSecret);
+        }
+        else if (pnplibconfig_1.RuntimeConfig.customHttpClient) {
+            return new pnplibconfig_1.RuntimeConfig.customHttpClient();
         }
         else {
             return new fetchclient_1.FetchClient();

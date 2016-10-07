@@ -137,6 +137,9 @@ export class HttpClient {
         } else if (RuntimeConfig.useNodeFetchClient) {
             let opts = RuntimeConfig.nodeRequestOptions;
             return new NodeFetchClient(opts.siteUrl, opts.clientId, opts.clientSecret);
+        } 
+        else if(RuntimeConfig.customHttpClient) {
+            return new (<any>RuntimeConfig.customHttpClient)();
         } else {
             return new FetchClient();
         }

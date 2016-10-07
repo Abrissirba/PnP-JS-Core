@@ -495,6 +495,7 @@ declare module "utils/logging" {
 }
 declare module "configuration/pnplibconfig" {
     import { TypedHash } from "collections/collections";
+    import { HttpClientImpl } from "net/httpclient";
     export interface NodeClientData {
         clientId: string;
         clientSecret: string;
@@ -525,6 +526,10 @@ declare module "configuration/pnplibconfig" {
          * If set the library will use node-fetch, typically for use with testing but works with any valid client id/secret pair
          */
         nodeClientOptions?: NodeClientData;
+        /**
+         * If set the library will use node-fetch, typically for use with testing but works with any valid client id/secret pair
+         */
+        customHttpClient?: HttpClientImpl;
     }
     export class RuntimeConfigImpl {
         private _headers;
@@ -534,6 +539,7 @@ declare module "configuration/pnplibconfig" {
         private _useSPRequestExecutor;
         private _useNodeClient;
         private _nodeClientData;
+        private _customHttpClient;
         constructor();
         set(config: LibraryConfiguration): void;
         headers: TypedHash<string>;
@@ -543,6 +549,7 @@ declare module "configuration/pnplibconfig" {
         useSPRequestExecutor: boolean;
         useNodeFetchClient: boolean;
         nodeRequestOptions: NodeClientData;
+        customHttpClient: HttpClientImpl;
     }
     export let RuntimeConfig: RuntimeConfigImpl;
     export function setRuntimeConfig(config: LibraryConfiguration): void;

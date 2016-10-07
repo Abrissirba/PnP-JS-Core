@@ -1,6 +1,7 @@
 "use strict";
 
 import { TypedHash } from "../collections/collections";
+import { HttpClientImpl } from "../net//httpclient";
 
 declare var global: any;
 
@@ -41,6 +42,10 @@ export interface LibraryConfiguration {
      * If set the library will use node-fetch, typically for use with testing but works with any valid client id/secret pair
      */
     nodeClientOptions?: NodeClientData;
+    /**
+     * If set the library will use node-fetch, typically for use with testing but works with any valid client id/secret pair
+     */
+    customHttpClient?: HttpClientImpl;
 }
 
 export class RuntimeConfigImpl {
@@ -52,6 +57,7 @@ export class RuntimeConfigImpl {
     private _useSPRequestExecutor: boolean;
     private _useNodeClient: boolean;
     private _nodeClientData: NodeClientData;
+    private _customHttpClient: HttpClientImpl;
 
     constructor() {
         // these are our default values for the library
@@ -94,6 +100,12 @@ export class RuntimeConfigImpl {
                 webAbsoluteUrl: config.nodeClientOptions.siteUrl,
             };
         }
+
+        if (config.hasOwnProperty("customHttpClient")) {
+            this._useNodeClient = false;
+            this._useSPRequestExecutor = false; // just don't allow this conflict
+            this._customHttpClient = config.customHttpClient;
+        }
     }
 
     public get headers(): TypedHash<string> {
@@ -122,6 +134,10 @@ export class RuntimeConfigImpl {
 
     public get nodeRequestOptions(): NodeClientData {
         return this._nodeClientData;
+    }
+
+    public get customHttpClient(): HttpClientImpl {
+        return this._customHttpClient;
     }
 }
 
