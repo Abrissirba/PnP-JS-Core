@@ -497,6 +497,9 @@ var HttpClient = (function () {
             return new nodefetchclient_1.NodeFetchClient(opts.siteUrl, opts.clientId, opts.clientSecret);
         }
         else if (pnplibconfig_1.RuntimeConfig.customHttpClient) {
+            if (typeof pnplibconfig_1.RuntimeConfig.customHttpClient === "object") {
+                return pnplibconfig_1.RuntimeConfig.customHttpClient;
+            }
             return new pnplibconfig_1.RuntimeConfig.customHttpClient();
         }
         else {
